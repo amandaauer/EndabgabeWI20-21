@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="firework.css" type="text/css" media="screen" />
+    <script src="canBackground.js" type="text/javascript" charset="utf-8"></script>
+    <script src="rockets.js" type="text/javascript" charset="utf-8"></script>
+    <script src="path.js" type="text/javascript" charset="utf-8"></script>
+    <script src="firework.js" type="text/javascript" charset="utf-8"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CreateFirework</title>
+</head>
+<body>
+    <header>
+        <h1>Firework-Creator</h1>
+        <p>Create a firework-name, choose a firework-type, select the intensity of the particel, control the lifetime of the firework and choose the color!</p>
+    </header>
+
+    <form>
+        <div id="form">
+        <div id="formDesc">
+            <h2>Choose</h2>
+
+            <fieldset id="Text1">
+                <legend> Name </legend>
+                <input type="text" name="Name" placeholder="create a name for firework" required />
+
+            </fieldset>
+
+            <fieldset>
+                <legend>Type</legend>
+                <input type="radio" name="Type" id="circle" value="circle" checked />
+                <label for="circle">circle</label>
+                <input type="radio" name="Type" id="rain" value="rain" />
+                <label for="rain">rain</label>
+                <input type="radio" name="Type" id="planet" value="planet" />
+                <label for="planet">planet</label>
+            </fieldset>
+
+            <fieldset> 
+                <legend>Intensity of particel</legend>
+                <input type="radio" name="Intensity" id="low" value="low" checked />
+                <label for="low">low</label>
+                <input type="radio" name="Intensity" id="middle" value="middle"/>
+                <label for="middle">middle</label>
+                <input type="radio" name="Intensity" id="high" value="high"/>
+                <label for="high">high</label>
+            </fieldset>
+
+            <fieldset> 
+                <legend>Lifetime</legend>
+                <span id="slider">
+                    <span>
+                        1Min
+                        <input type="range" name="Lifetime" id="lifetime" min="1" max="5" step="0,5" value="1">
+                        5Min
+                    </span>
+                </span>
+            </fieldset>
+
+            <fieldset id="Color">
+                <legend>Color</legend>
+                <input type="color" name="Color" id="color" value="#ff0000">
+
+            </fieldset>
+
+    
+        </div>
+        </div>
+
+    </form>
+
+    <div id="result">
+        <h2>Your Firework</h2>
+        <div id="description"></div>
+        <div id="firework"></div>
+
+        <button type="reset" id="ResetButton" form="form">Reset</button>
+		<button type="submit" id="SubmitButton"  form="form">Add</button>
+        
+    </div>
+
+    <canvas width=800 height=600></canvas>
+
+</body> 
+</html>
