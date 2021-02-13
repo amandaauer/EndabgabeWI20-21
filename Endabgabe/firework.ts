@@ -1,90 +1,82 @@
-// import axios from "axios";
- namespace Firework {
-    
+namespace Firework {
+    // interface RocketData  {
+    // name: string;
+    // type: string;
+    // intensity: string;
+    // lifetime: string;
+    // color: string;        
+    // _id: number;
+    // }
     window.addEventListener("load", handleLoad);
-
-    let name: String = "" ;
-    let type: String = "";
-    let intensity: String = "";
-    let lifetime: String = "";
-    let color: String = "";
+    const queryString: string = "http://localhost:5001";
     let formData: FormData;
-
-  
+    let rockets: HTMLDivElement;
+    // tslint:disable-next-line:no-any
+    let response: any[];
     function handleLoad(_event: Event): void {
-        //   ResetButton = document.getElementById("ResetButton");
-        //   ResetButton.addEventListener("click", Reset);
+        GetAllRockets();
         let form: HTMLElement | null = document.getElementById("formDesc");
         form?.addEventListener("change", handleDesc);
-        // console.log (_event)
-        // let Name: HTMLInputElement = <HTMLInputElement>document.querySelector("input");
-        // console.log(type.Name);
-        //   let submit: HTMLButtonElement = document.querySelector("#SubmitButton");
-        //   submit.addEventListener("click", Reset);
-        //   console.log(submit);
         let submitButton: HTMLElement | null = document.getElementById("SubmitButton");
         submitButton?.addEventListener("click", Add);
         let resetButton: HTMLElement | null = document.getElementById("ResetButton");
         resetButton?.addEventListener("click", Reset);
+        rockets = <HTMLDivElement>document.getElementById("rockets");
+        let canvas: HTMLElement | null = document.getElementById("canvas");
+        if (response.length > 0) canvas?.addEventListener("click", DeleteRocket);
     }
  
 
     function handleDesc(_event: Event): void {
-        // console.log(_event);
          formData = new FormData(document.forms[0]);
          let results: HTMLDivElement = <HTMLDivElement>document.getElementById("firework");
-        // console.log("results", results);
          results.innerHTML = "";
-        // let 
-        // formData = formData;
-        // console.log("formdata", formData);
          for (let entry of formData) {
-            // console.log(entry)
-            SetVariables(entry);
             results.innerHTML += entry[0] + ": " + entry[1] + "<br>";
         }
-         console.log(
-            {
-                   name,
-     type,
-     intensity,
-     lifetime,
-     color
-            }
-        );
-        
-
     }
     function Reset(_event: Event): void {
        console.log("click");
     }
     async function Add(_event: Event): Promise<void> {
-        // tslint:disable-next-line:typedef
-        // const axios = require("axios");
-          // tslint:disable-next-line: no-any
           let query: URLSearchParams = new URLSearchParams(<any>formData);
-          let response: object =  await fetch("http://localhost:5001" + "?" + query.toString());
-          console.log(response);
+          await fetch(queryString + "?" + query, {
+            method: "POST",
+            mode: "cors",
+            credentials: "same-origin",
+            referrerPolicy: "no-referrer"
+          });
+          GetAllRockets();
     }
-    // tslint:disable-next-line: no-any
-    function SetVariables(entry: any[]): void {
-        let typeField: String = entry[0];
-        switch (typeField) {
-            case "Name":
-                name = entry[1];
-                break;
-            case "Type":
-                type = entry[1];
-                break;
-            case "Intensity":
-                intensity = entry[1];
-                break;
-            case "Lifetime":
-                lifetime = entry[1];
-                break;
-            default:
-                color = entry[1];
-                break;
+    async function GetAllRockets(): Promise<void> {
+        try {
+            // tslint:disable-next-line:typedef
+            const r: Response = await fetch(queryString, {
+                method: "GET",
+                mode: "cors",
+                credentials: "same-origin",
+                referrerPolicy: "no-referrer"
+            });
+            response = await r.json();
+            console.log(response);
+            rockets.innerHTML = "";
+            for (let entry of response) {
+                rockets.innerHTML += "Name" + ": " + entry.Name + "<br>";
+        }
+        } catch (e) {
+            console.log(e);
         }
     }
+    async function DeleteRocket(): Promise<void> {
+        const rocket: any = response[0];
+        let query: URLSearchParams = new URLSearchParams(<any>rocket);
+        await fetch(queryString + "?" + query, {
+            method: "DELETE",
+            mode: "cors",
+            credentials: "same-origin",
+            referrerPolicy: "no-referrer"
+        });
+        GetAllRockets();
+    }
+    
 }

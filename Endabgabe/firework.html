@@ -2,10 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <style>
+        .flex{
+            display:flex;
+        }
+        #firework{
+            width:20%;
+        }
+    </style>
     <link rel="stylesheet" href="firework.css" type="text/css" media="screen" />
-    <script src="canBackground.js" type="text/javascript" charset="utf-8"></script>
+    <script src="vector.js" type="text/javascript" charset="utf-8"></script>
+    <script src="particle.js" type="text/javascript" charset="utf-8"></script>
+    <script src="main.js" type="text/javascript" charset="utf-8"></script>
     <script src="rockets.js" type="text/javascript" charset="utf-8"></script>
-    <script src="path.js" type="text/javascript" charset="utf-8"></script>
     <script src="firework.js" type="text/javascript" charset="utf-8"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CreateFirework</title>
@@ -73,14 +82,17 @@
     <div id="result">
         <h2>Your Firework</h2>
         <div id="description"></div>
-        <div id="firework"></div>
+        <div class="flex">
+            <div id="firework"></div>
+            <div id="rockets"></div>
+        </div>
 
         <button type="reset" id="ResetButton" form="form">Reset</button>
 		<button type="submit" id="SubmitButton"  form="form">Add</button>
         
     </div>
 
-    <canvas width=800 height=600></canvas>
+    <canvas id="canvas" width=800 height=600 style="background: url(Himmel.jpg)"></canvas>
 
 </body> 
 </html>

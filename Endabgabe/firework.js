@@ -1,83 +1,84 @@
 "use strict";
-// import axios from "axios";
 var Firework;
 (function (Firework) {
+    // interface RocketData  {
+    // name: string;
+    // type: string;
+    // intensity: string;
+    // lifetime: string;
+    // color: string;        
+    // _id: number;
+    // }
     window.addEventListener("load", handleLoad);
-    let name = "";
-    let type = "";
-    let intensity = "";
-    let lifetime = "";
-    let color = "";
+    const queryString = "http://localhost:5001";
     let formData;
+    let rockets;
+    // tslint:disable-next-line:no-any
+    let response;
     function handleLoad(_event) {
-        //   ResetButton = document.getElementById("ResetButton");
-        //   ResetButton.addEventListener("click", Reset);
+        GetAllRockets();
         let form = document.getElementById("formDesc");
         form?.addEventListener("change", handleDesc);
-        // console.log (_event)
-        // let Name: HTMLInputElement = <HTMLInputElement>document.querySelector("input");
-        // console.log(type.Name);
-        //   let submit: HTMLButtonElement = document.querySelector("#SubmitButton");
-        //   submit.addEventListener("click", Reset);
-        //   console.log(submit);
         let submitButton = document.getElementById("SubmitButton");
         submitButton?.addEventListener("click", Add);
         let resetButton = document.getElementById("ResetButton");
         resetButton?.addEventListener("click", Reset);
+        rockets = document.getElementById("rockets");
+        let canvas = document.getElementById("canvas");
+        if (response.length > 0)
+            canvas?.addEventListener("click", DeleteRocket);
     }
     function handleDesc(_event) {
-        // console.log(_event);
         formData = new FormData(document.forms[0]);
         let results = document.getElementById("firework");
-        // console.log("results", results);
         results.innerHTML = "";
-        // let 
-        // formData = formData;
-        // console.log("formdata", formData);
         for (let entry of formData) {
-            // console.log(entry)
-            SetVariables(entry);
             results.innerHTML += entry[0] + ": " + entry[1] + "<br>";
         }
-        console.log({
-            name,
-            type,
-            intensity,
-            lifetime,
-            color
-        });
     }
     function Reset(_event) {
         console.log("click");
     }
     async function Add(_event) {
-        // tslint:disable-next-line:typedef
-        // const axios = require("axios");
-        // tslint:disable-next-line: no-any
         let query = new URLSearchParams(formData);
-        let response = await fetch("http://localhost:5001" + "?" + query.toString());
-        console.log(response);
+        await fetch(queryString + "?" + query, {
+            method: "POST",
+            mode: "cors",
+            credentials: "same-origin",
+            referrerPolicy: "no-referrer"
+        });
+        GetAllRockets();
     }
-    // tslint:disable-next-line: no-any
-    function SetVariables(entry) {
-        let typeField = entry[0];
-        switch (typeField) {
-            case "Name":
-                name = entry[1];
-                break;
-            case "Type":
-                type = entry[1];
-                break;
-            case "Intensity":
-                intensity = entry[1];
-                break;
-            case "Lifetime":
-                lifetime = entry[1];
-                break;
-            default:
-                color = entry[1];
-                break;
+    async function GetAllRockets() {
+        try {
+            // tslint:disable-next-line:typedef
+            const r = await fetch(queryString, {
+                method: "GET",
+                mode: "cors",
+                credentials: "same-origin",
+                referrerPolicy: "no-referrer"
+            });
+            response = await r.json();
+            console.log(response);
+            rockets.innerHTML = "";
+            for (let entry of response) {
+                rockets.innerHTML += "Name" + ": " + entry.Name + "<br>";
+            }
         }
+        catch (e) {
+            console.log(e);
+        }
+    }
+    async function DeleteRocket() {
+        const rocket = response[0];
+        let query = new URLSearchParams(rocket);
+        await fetch(queryString + "?" + query, {
+            method: "DELETE",
+            mode: "cors",
+            credentials: "same-origin",
+            referrerPolicy: "no-referrer"
+        });
+        GetAllRockets();
     }
 })(Firework || (Firework = {}));
 //# sourceMappingURL=firework.js.map

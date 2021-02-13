@@ -7,8 +7,14 @@ const Mongo = require("mongodb");
 const assert = require("assert");
 var Firework;
 (function (Firework) {
+    // interface RocketData  {
+    //   name: string;
+    //   type: string;
+    //   intensity: string;
+    //   lifetime: string;
+    //   color: string;        
+    // }
     let server = Http.createServer();
-    // let rockets: Mongo.Collection;
     let port = process.env.PORT;
     if (port == undefined)
         port = 5001;
@@ -20,12 +26,12 @@ var Firework;
     server.addListener("request", handleRequest);
     // tslint:disable-next-line:no-any
     let response = {};
-    // tslint:disable-next-line:no-any
     let db;
     async function connectToDatabase(_url) {
         try {
             let options = { useNewUrlParser: true, useUnifiedTopology: true };
             let mongoClient = new Mongo.MongoClient(_url, options);
+            // tslint:disable-next-line: typedef
             await mongoClient.connect(function (err) {
                 assert.equal(null, err);
                 console.log("Connected successfully to server");
@@ -39,56 +45,55 @@ var Firework;
     async function handleRequest(_request, _response) {
         _response.setHeader("content-type", "text/html; charset=utf-8");
         _response.setHeader("Access-Control-Allow-Origin", "*");
-        let jsonString = "";
+        _response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
         if (_request.url) {
             let url = Url.parse(_request.url, true);
             for (let key in url.query) {
                 response[key] = url.query[key];
-                _response.write(key + ":" + url.query[key] + "<br/>");
             }
-            jsonString = JSON.stringify(url.query);
-            _response.write(jsonString);
         }
-        console.log(response);
-        AddRocket(response);
-        // tslint:disable-next-line:no-any
-        await GetAll(_response);
-        // _response.write(rockets)
-        _response.end();
+        switch (_request.method) {
+            case "POST":
+                await AddRocket(response, _response);
+                break;
+            case "GET":
+                await GetRockets(_response);
+                break;
+            case "DELETE":
+                await DeleteRocket(response, _response);
+                break;
+            default:
+                console.log("default");
+                _response.end();
+                break;
+        }
     }
-    async function AddRocket(response) {
+    function AddRocket(response, _response) {
         try {
-            // tslint:disable-next-line:typedef
             const collection = db.collection("rocket");
             collection.insertMany([response]);
+            _response.end();
         }
         catch (e) {
-            console.log("L65", e);
+            console.log(e);
         }
     }
-    // tslint:disable-next-line:no-any
-    async function GetAll(_response) {
+    async function DeleteRocket(response, _response) {
+        let rockets = await db.collection("rocket");
+        let rocketName = response.Name;
+        await rockets.deleteOne({ "Name": rocketName });
+        _response.end();
+        _response.end();
+    }
+    async function GetRockets(_response) {
         try {
-            // // tslint:disable-next-line:typedef
-            // const collection = db.collection("rocket");
-            // // tslint:disable-next-line:no-any
-            // const rockets: any[] = await collection.find();
-            // // return rockets;
-            // // _response.write(rockets);
-            // console.log(rockets);
-            // _response.end();
-            let results = db.collection("rocket").find();
-            let rockets = await results.toArray();
-            for (let recipe of rockets) {
-                for (let key in Object(recipe)) {
-                    _response.write(key + " : " + Object(recipe)[key] + "\n");
-                }
-                _response.write("\n");
-            }
-            //  _response.end();
+            let rockets = await db.collection("rocket").find({});
+            let results = await rockets.toArray();
+            await _response.write(JSON.stringify(results));
+            await _response.end();
         }
         catch (e) {
-            console.log("L80", e);
+            console.log(e);
         }
     }
 })(Firework = exports.Firework || (exports.Firework = {}));
