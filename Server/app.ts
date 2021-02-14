@@ -50,7 +50,7 @@ export namespace Firework {
             for (let key in url.query) {
               response[key] = url.query[key];
             }
-    }
+        }
         switch (_request.method) {
           case "POST":
            await AddRocket(response, _response);
@@ -82,7 +82,6 @@ export namespace Firework {
     await rockets.deleteOne({ "Name": rocketName });
     _response.end();
 
-    _response.end();
   }
   async function GetRockets(_response: Http.ServerResponse): Promise<void> {
     try {

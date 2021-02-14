@@ -6,14 +6,31 @@ namespace Firework {
     // lifetime: string;
     // color: string;        
     // _id: number;
-    // }
+    //}
     window.addEventListener("load", handleLoad);
-    const queryString: string = "http://localhost:5001";
+    export let crc2: CanvasRenderingContext2D;
+      // const queryString: string = "http://localhost:5001";
+    const queryString: string = "https://eiawi2021server.herokuapp.com/"
     let formData: FormData;
     let rockets: HTMLDivElement;
+    let fireworks: Feuerwerk [] = [];
     // tslint:disable-next-line:no-any
     let response: any[];
-    function handleLoad(_event: Event): void {
+    //let canvas: HTMLCanvasElement | null 
+    export let imgData: ImageData; 
+   // let fps: number = 10;
+ 
+    async function handleLoad(_event: Event):Promise<void> {
+        // canvas = <HTMLCanvasElement>document.querySelector("canvas");
+        // if (!canvas)
+        //     return;
+        // crc2 = <CanvasRenderingContext2D>canvas.getContext("2d");
+        // imgData = crc2.getImageData(0, 0, canvas.width, canvas.height);
+
+        // crc2.fillStyle = "Himmel.jpg";
+        //crc2.fillRect(0, 0, canvas.width, canvas.height);
+       // crc2.fill
+
         GetAllRockets();
         let form: HTMLElement | null = document.getElementById("formDesc");
         form?.addEventListener("change", handleDesc);
@@ -23,7 +40,7 @@ namespace Firework {
         resetButton?.addEventListener("click", Reset);
         rockets = <HTMLDivElement>document.getElementById("rockets");
         let canvas: HTMLElement | null = document.getElementById("canvas");
-        if (response.length > 0) canvas?.addEventListener("click", DeleteRocket);
+        canvas?.addEventListener("click", DeleteRocket);
     }
  
 
@@ -68,15 +85,58 @@ namespace Firework {
         }
     }
     async function DeleteRocket(): Promise<void> {
-        const rocket: any = response[0];
-        let query: URLSearchParams = new URLSearchParams(<any>rocket);
-        await fetch(queryString + "?" + query, {
-            method: "DELETE",
+          const rocket: any = response[0];
+         let query: URLSearchParams = new URLSearchParams(<any>rocket);
+         await fetch(queryString + "?" + query, {
+             method: "DELETE",
             mode: "cors",
-            credentials: "same-origin",
+             credentials: "same-origin",
             referrerPolicy: "no-referrer"
-        });
-        GetAllRockets();
-    }
+      });
+          GetAllRockets();
+     }
+
     
+      function handleClick(_event: MouseEvent): void {                                  //wenn "click" auf den Canvas gehört wird, wird offsetX & offset Y ausgelöst
+          let tempPosition: Vector = new Vector(_event.offsetX, _event.offsetY);
+        createFirework(tempPosition);                                                 //für das Feuerwerk wird eine Temporäre Position gegeben
+
+     }
+
+     function createFirework(tempPosition: Vector) {                                     //tempPosition ist eine Methode von createFirework und wird als Vector dargestellt
+         console.log("createFirework");                                                  //createFirework holt sich die Input Elemente über deren ID und erstellt damit das gewünscht Feuerwerk des Nutzers
+
+          let ExplosionTarget: HTMLInputElement = <HTMLInputElement>document.getElementById("explosion");
+          let ExplosionValue: any = ExplosionTarget.value;
+
+      fireworks.push(firework);
+    }
+
+    function update() {
+        //Der Hintergrund wird geupdatet
+        let canvas: HTMLCanvasElement | null;
+
+
+        canvas = <HTMLCanvasElement>document.querySelector("canvas");
+        if (!canvas)
+            return;
+
+        crc2 = <CanvasRenderingContext2D>canvas.getContext("2d");
+        imgData = crc2.getImageData(0, 0, canvas.width, canvas.height);
+
+       // drawCanvas();
+
+
+        for (let i: number = fireworks.length - 1; i >= 0; i--) {           //solange noch Daten im Firework Array sind, wird die function update ausgeführt, firework ist also noch Alive 
+            //sobald i>= 0 ist, wird die Funktion beendet und das Feuerwerk ebenso
+            fireworks[i].draw();
+            fireworks[i].update();
+            if (!fireworks[i].isAlive()) {
+                fireworks.splice(i, 1);
+
+            }
+        }
+
+
+    }
 }

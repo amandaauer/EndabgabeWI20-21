@@ -11,10 +11,11 @@
         }
     </style>
     <link rel="stylesheet" href="firework.css" type="text/css" media="screen" />
-    <script src="vector.js" type="text/javascript" charset="utf-8"></script>
-    <script src="particle.js" type="text/javascript" charset="utf-8"></script>
+    <script src="rectangle.js" type="text/javascript" charset="utf-8"></script>
+    <script src="heart.js" type="text/javascript" charset="utf-8"></script>
+    <script src="circle.js" type="text/javascript" charset="utf-8"></script>
+    <script src="Vector.js" type="text/javascript" charset="utf-8"></script>
     <script src="main.js" type="text/javascript" charset="utf-8"></script>
-    <script src="rockets.js" type="text/javascript" charset="utf-8"></script>
     <script src="firework.js" type="text/javascript" charset="utf-8"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CreateFirework</title>
@@ -40,10 +41,10 @@
                 <legend>Type</legend>
                 <input type="radio" name="Type" id="circle" value="circle" checked />
                 <label for="circle">circle</label>
-                <input type="radio" name="Type" id="rain" value="rain" />
-                <label for="rain">rain</label>
-                <input type="radio" name="Type" id="planet" value="planet" />
-                <label for="planet">planet</label>
+                <input type="radio" name="Type" id="heart" value="heart" />
+                <label for="heart">heart</label>
+                <input type="radio" name="Type" id="rectangle" value="rectangle" />
+                <label for="rectangle">rectangle</label>
             </fieldset>
 
             <fieldset> 
@@ -91,8 +92,8 @@
 		<button type="submit" id="SubmitButton"  form="form">Add</button>
         
     </div>
-
-    <canvas id="canvas" width=800 height=600 style="background: url(Himmel.jpg)"></canvas>
-
+    <div id=canvasContainer>
+    <canvas id="canvas" width=800 height=600 style="background: url(Himmel.jpg)"> </canvas>
+</div> 
 </body> 
 </html>

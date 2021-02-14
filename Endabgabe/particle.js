@@ -1,16 +1,17 @@
 "use strict";
-var silvester;
-(function (silvester) {
+var Firework;
+(function (Firework) {
+    console.log("Particle");
     class Particle {
         constructor() {
         }
         draw(_color, _particleRadius) {
         }
         move() {
-            this.velocity = Vector.getSum(this.velocity, new Vector(0, 0.01)); //Gravitation
-            this.position = Vector.getSum(this.position, this.velocity);
+            this.velocity = Firework.Vector.getSum(this.velocity, new Firework.Vector(0, 0.01)); //Gravitaion
+            this.position = Firework.Vector.getSum(this.position, this.velocity);
         }
     }
-    silvester.Particle = Particle;
-})(silvester || (silvester = {}));
-//# sourceMappingURL=particle.js.map
+    Firework.Particle = Particle;
+})(Firework || (Firework = {}));
+//# sourceMappingURL=Particle.js.map
