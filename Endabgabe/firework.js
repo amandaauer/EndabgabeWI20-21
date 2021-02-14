@@ -98,6 +98,7 @@ var Firework;
         console.log("createFirework"); //createFirework holt sich die Input Elemente über deren ID und erstellt damit das gewünscht Feuerwerk des Nutzers
         let ExplosionTarget = document.getElementById("explosion");
         let ExplosionValue = ExplosionTarget.value;
+        let firework = [];
         fireworks.push(firework);
     }
     function update() {

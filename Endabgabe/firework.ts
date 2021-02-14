@@ -108,6 +108,7 @@ namespace Firework {
 
           let ExplosionTarget: HTMLInputElement = <HTMLInputElement>document.getElementById("explosion");
           let ExplosionValue: any = ExplosionTarget.value;
+          let firework: any = [] ;
 
       fireworks.push(firework);
     }
