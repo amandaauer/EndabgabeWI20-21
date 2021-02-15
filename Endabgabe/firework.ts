@@ -1,8 +1,8 @@
 namespace Firework {
     
-    window.addEventListener("click", handleClick);
+    // window.addEventListener("click", handleClick);
     window.addEventListener("load", handleLoad);
-      // const queryString: string = "http://localhost:5001";
+    //   const queryString: string = "http://localhost:5001";
     const queryString: string = "https://eiawi2021server.herokuapp.com/"
     export let imgData: ImageData;
     export let crc2: CanvasRenderingContext2D;
@@ -33,7 +33,7 @@ namespace Firework {
         resetButton?.addEventListener("click", Reset);
         rockets = <HTMLDivElement>document.getElementById("rockets");
         let canvas: HTMLElement | null = document.getElementById("canvas");
-        canvas?.addEventListener("click", DeleteRocket);   
+        canvas?.addEventListener("click", handleClick);
 
 
        // canvas = <HTMLCanvasElement>document.querySelector("canvas");
@@ -45,8 +45,10 @@ namespace Firework {
         // crc2.fillStyle = "Himmel.jpg";
         //crc2.fillRect(0, 0, canvas.width, canvas.height);
        // crc2.fill
-       //canvas.addEventListener("click", handleClick); //Canvas bekommt ebenfalls ein "click" Event, damit er reagieren kann, wenn Nutzer Rakete zum explodieren bringen will.
-       window.setInterval(update, 10 / fps);
+      // canvas.addEventListener("click", handleClick); //Canvas bekommt ebenfalls ein "click" Event, damit er reagieren kann, wenn Nutzer Rakete zum explodieren bringen will.
+      
+
+       window.setInterval(update, 1000 / fps);
 
 
         
@@ -61,8 +63,8 @@ namespace Firework {
             results.innerHTML += entry[0] + ": " + entry[1] + "<br>";
         }
     }
-    function Reset(_event: Event): void {
-       console.log("click");
+          function Reset(_event: Event): void {
+           console.log("click");
     }
     async function Add(_event: Event): Promise<void> {
         // console.log(formData)
@@ -89,7 +91,7 @@ namespace Firework {
             console.log(response);
             rockets.innerHTML = "";
             for (let entry of response) {
-                rockets.innerHTML += "Name" + ": " + entry.Name + "<br>";
+                rockets.innerHTML += "Name" + ": " + entry.rocketName + "<br>";
                 
         }
         } catch (e) {
@@ -122,31 +124,38 @@ namespace Firework {
         
     
     function createFirework(tempPosition: Vector) {    
-        console.log("create firework");                              //tempPosition ist eine Methode von createFirework und wird als Vector dargestellt
-                                                                                         
-       let explosionTarget: HTMLInputElement = <HTMLInputElement>document.getElementById("explosion");  //createFirework holt sich die Input Elemente über deren ID und erstellt damit das gewünscht Feuerwerk des Nutzers
-       let explosionValue = Number(explosionTarget.value);
+                                     //tempPosition ist eine Methode von createFirework und wird als Vector dargestellt
+      
+        if(response.length > 0){
+            console.log("create firework"); 
+        let rocket: any=response[0];
+        // let explosionTarget: HTMLInputElement = <HTMLInputElement>document.getElementById("explosion");  //createFirework holt sich die Input Elemente über deren ID und erstellt damit das gewünscht Feuerwerk des Nutzers
+        let explosionValue = Number(rocket.ExploSize);
         console.log(explosionValue);
 
-        let lifetimeTarget: HTMLInputElement = <HTMLInputElement>document.getElementById("lifetime_f");
-        let lifetimeValue = Number(lifetimeTarget.value);
+        // let lifetimeTarget: HTMLInputElement = <HTMLInputElement>document.getElementById("lifetime_f");
+        let lifetimeValue = Number(rocket.Lifetime);
     
-        let colorTarget: HTMLSelectElement = <HTMLSelectElement>document.getElementById("color");
-        let colorValue: string = colorTarget.value;
+        // let colorTarget: HTMLSelectElement = <HTMLSelectElement>document.getElementById("color");
+        let colorValue: string = rocket.Color;
 
-        let amountTarget: HTMLInputElement = <HTMLInputElement>document.getElementById("amount");
-        let amountValue = Number(amountTarget.value);
+        // let amountTarget: HTMLInputElement = <HTMLInputElement>document.getElementById("amount");
+        let amountValue = Number(rocket.Amount);
 
-        let particleTypeTarget: HTMLSelectElement = <HTMLSelectElement>document.getElementById("particleType");
-        let particleTypeValue = Number(particleTypeTarget.value);
-        console.log(particleTypeTarget.value);
+        // let particleTypeTarget: HTMLSelectElement = <HTMLSelectElement>document.getElementById("particleType");
+        let particleTypeValue = Number(rocket.ParticleType);
+        console.log(particleTypeValue);
       
 
-        let particleSizeTarget: HTMLInputElement = <HTMLInputElement>document.getElementById("Size_P");
-        let particleSizeValue = Number(particleSizeTarget.value);
+        // let particleSizeTarget: HTMLInputElement = <HTMLInputElement>document.getElementById("Size_P");
+        let particleSizeValue = Number(rocket.ParticleSize);
 
         let firework: Firework = new Firework(tempPosition, particleTypeValue, colorValue, amountValue, explosionValue,particleSizeValue, lifetimeValue * fps / 2);
         fireworks.push(firework);
+        
+
+        DeleteRocket();
+        }
     }
 
     function update() {
@@ -165,11 +174,13 @@ namespace Firework {
 
         for (let i: number = fireworks.length - 1; i >= 0; i--) {           //solange noch Daten im Firework Array sind, wird die function update ausgeführt, firework ist also noch Alive 
             //sobald i>= 0 ist, wird die Funktion beendet und das Feuerwerk ebenso
+            
             fireworks[i].draw();
             fireworks[i].update();
-            if (!fireworks[i].isAlive()) {
-                fireworks.splice(i, 1);
+            if (fireworks[i].isAlive() === false) {
 
+                fireworks.splice(i, 1);
+                
             }
         }
 

@@ -2,6 +2,7 @@ import * as Http from "http";
 import * as Url from "url";
 import * as Mongo from "mongodb";
 import * as assert from "assert";
+import { v4 as uuidv4 } from 'uuid';
 export namespace Firework {
   // interface RocketData  {
   //   name: string;
@@ -67,10 +68,13 @@ export namespace Firework {
             break;
         }
   }
-  function AddRocket(response: object, _response: Http.ServerResponse): void {
+  function AddRocket(response: any, _response: Http.ServerResponse): void {
         try {
+          console.log(response)
+          response["_id"]=uuidv4();
           const collection: Mongo.Collection<any> = db.collection("rocket");
           collection.insertMany([response]);
+          console.log("add")
           _response.end();
         } catch (e) {
           console.log(e);
@@ -80,6 +84,7 @@ export namespace Firework {
     let rockets: Mongo.Collection<any> = await db.collection("rocket");
     let rocketName: string  = response.Name;
     await rockets.deleteOne({ "Name": rocketName });
+    console.log("del")
     _response.end();
 
   }
@@ -87,6 +92,7 @@ export namespace Firework {
     try {
       let rockets: Mongo.Cursor = await db.collection("rocket").find({});
       let results: string[] = await rockets.toArray();
+      console.log("get")
       await _response.write(JSON.stringify(results));                             
       await  _response.end();
     } catch (e) {
