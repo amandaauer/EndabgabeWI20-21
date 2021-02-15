@@ -13,7 +13,9 @@
     <link rel="stylesheet" href="firework.css" type="text/css" media="screen" />
     <script src="Vector.js" type="text/javascript" charset="utf-8"></script>
     <script src="particle.js" type="text/javascript" charset="utf-8"></script>
-    <script src="MoveableObject.js" type="text/javascript" charset="utf-8"></script>
+    <script src="line.js" type="text/javascript" charset="utf-8"></script>
+    <script src="dots.js" type="text/javascript" charset="utf-8"></script>
+    <script src="rectangle.js" type="text/javascript" charset="utf-8"></script>
     <script src="main.js" type="text/javascript" charset="utf-8"></script>
     <script src="firework.js" type="text/javascript" charset="utf-8"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -26,44 +28,58 @@
     </header>
 
     <form>
-        <div id="form">
+        
         <div id="formDesc">
             <h2>Choose</h2>
 
             <fieldset id="Text1">
                 <legend> Name </legend>
-                <input type="text" name="Name" placeholder="create a name for firework" required />
+                <input type="text" name="rocketName" placeholder="create a name for firework" required />
 
             </fieldset>
 
             <fieldset>
-                <legend>Type</legend>
-                <input type="radio" name="Type" id="circle" value="circle" checked />
-                <label for="circle">circle</label>
-                <input type="radio" name="Type" id="heart" value="heart" />
-                <label for="heart">heart</label>
-                <input type="radio" name="Type" id="rectangle" value="rectangle" />
-                <label for="rectangle">rectangle</label>
+                <legend>Particle Speed</legend>
+                <span>
+                    slow
+                    <input type="range" name="ExploSize" id="explosion" min="1" max="10" step="1" value= 1>
+                    fast
+                </span>
             </fieldset>
 
-            <fieldset> 
-                <legend>Intensity of particel</legend>
-                <input type="radio" name="Intensity" id="low" value="low" checked />
-                <label for="low">low</label>
-                <input type="radio" name="Intensity" id="middle" value="middle"/>
-                <label for="middle">middle</label>
-                <input type="radio" name="Intensity" id="high" value="high"/>
-                <label for="high">high</label>
+            <fieldset>
+                <legend>Type of Particle</legend>
+                <select id="particleType" name="ParticleType">
+                    <option value="0">rectangle</option>
+                    <option value= "1" >dot</option>
+                    <option value="2" >line</option>
+                </select>
             </fieldset>
 
             <fieldset> 
                 <legend>Lifetime</legend>
-                <span id="slider">
-                    <span>
-                        1Min
-                        <input type="range" name="Lifetime" id="lifetime" min="1" max="5" step="0,5" value="1">
-                        5Min
-                    </span>
+                <span>
+                    1 sec
+                    <input type="range" name="Lifetime" id="lifetime_f" min="1" max="50" step="1" value="10">
+                    50 sec
+                </span>
+            </fieldset>
+
+            <fieldset>
+                <legend>Amount of Particle</legend>
+                <span>
+                    10
+                    <input type="range" name="Amount" id="amount"  min="10" max="1000" step="1"value="10">
+                    1000
+                </span>
+            </fieldset>
+
+            <fieldset>
+                <legend>Size of Particle</legend>
+                <span>
+                    10 pixel
+                    <input type="range" name="ParticleSize" id="Size_P" min="10" max="30" step="1" value="10">
+                    30 pixel
                 </span>
             </fieldset>
 
@@ -75,7 +91,7 @@
 
     
         </div>
-        </div>
+        
 
     </form>
 

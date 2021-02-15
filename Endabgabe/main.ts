@@ -1,45 +1,83 @@
 namespace Firework {
+    console.log("firework");
 
-    export interface Rocket {
-        name: string;
-        intensity: number;
-        color: string;
-        type: string;
-        lifetime: number;
-    }
+    export class Firework {             //Klasse Feuerwerk, baut aus den eingegebenen Nutzerdaten eine Rakete
 
-    export function generateContent(_titelList: Rocket[]): void {
-
-        let group: HTMLElement | null = null;
-        let fieldset: HTMLFieldSetElement | null = document.querySelector("fieldset#fireworkTitel");
-        group = createSelect(_titelList);
-
-        if (fieldset && group) //wenn das Fieldset UND (&&) die Gruppe definiert ist, dann kannst du die group als Kind anhängen
-            fieldset.appendChild(group);
-    }
+        public position: Vector;                      //Werten wird ein Typ zugeordnet
+        public color: string;
+        public explosion: number;
+        public amount: number;
+        public particleRadius: number;
+        private lifeTime: number;
 
 
 
+        protected particleArray: particle[] = [];                        //im Particle Array, werden die gewählten Partikel gelistet
 
-    function createSelect(_titelList: Rocket[]): HTMLElement | null {
+        constructor(_position: Vector, _particleTypeValue: number, _color: string, _amount: number, _explosion: number, _particleRadius: number, _lifetime: number) {
 
-        // let group: HTMLDivElement = document.createElement("div");
-        let selection: HTMLSelectElement = document.createElement("select");
-        selection.name = "LoadedTitels";
-        selection.addEventListener("change",getDataFromServer );
-        //selection.id = "Test";
+            this.position = _position;
+            this.color = _color;
+            this.amount = _amount;
+            this.particleRadius = _particleRadius;
+            this.lifeTime = _lifetime;
 
-        for (let titel of _titelList) {
-            let option: HTMLOptionElement = document.createElement("option");
 
-            option.setAttribute("name", titel.name);
+            switch (_particleTypeValue) {
 
-            option.value = option.textContent = titel.name;
+                case 0:
+                    for (let i: number = 0; i < this.amount; i++) {                            //i wird gleich 0 gesetzt, solange i kliener als die Anzahl ist wird in das particle Array ein neues Rectangel gepusht 
+                        this.particleArray.push(new Rectangle(this.position, Vector.getuberVector(_explosion, Vector.getRandom(-1, 1))));
+                        console.log("Rectangle");
+                    }
+                    break;
 
-            selection.appendChild(option);
+                case 1:
+                    for (let i: number = 0; i < this.amount; i++) {
+                        this.particleArray.push(new Dot(this.position, Vector.getuberVector(_explosion, Vector.getRandom(-1, 1))));
+                        console.log("Dot");
+
+                    }
+                    break;
+
+                case 2:
+                    for (let i: number = 0; i < this.amount; i++) {
+                        this.particleArray.push(new Line(this.position, Vector.getuberVector(_explosion, Vector.getRandom(-1, 1))));
+                        console.log("Line");
+                    }
+                    break;
+
+                default: console.log("wrong type")
+                    return;
+                // wenn keiner der gennanten Typen ausgewählt wurde, wird "wrong type" ausgegeben.                    
+
+            }
+        }
+
+
+        public draw(): void {
+            for (let i: number = 0; i < this.particleArray.length; i++) {           //for Schleife: erster Ausdruck wird ausgeführt, bevor Schleife beginnt.Der zweite ist die Bedingung für die Ausführung der Schleife.Der 3. wird nach der Ausführung jeden Codeblocks ausgeführt.
+                this.particleArray[i].draw(this.color, this.particleRadius);
+
+            }
 
         }
-        return selection;
-    }
 
+        public update(): void {
+            console.log(this.lifeTime);
+            this.lifeTime--;                                                          //verringer lifeTime wenn i kleiner als die Länge des particle Arrays ist,dann führe die move Funktion von Particle aus, anschließend erhöhe  i um 1
+            for (let i: number = 0; i < this.particleArray.length; i++) {
+               this.particleArray[i].move();
+            }
+        }
+
+        public isAlive(): boolean {
+            if (this.lifeTime == 0) { //wenn die beiden Operatoren gleich sind, wird false zurückgegeben, ansonsten true
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+    }
 }

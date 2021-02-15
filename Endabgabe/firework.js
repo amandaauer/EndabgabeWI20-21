@@ -7,26 +7,16 @@ var Firework;
     const queryString = "https://eiawi2021server.herokuapp.com/";
     let formData;
     let rockets;
-    // let fireworks: Feuerwerk [] = [];
     // tslint:disable-next-line:no-any
     let response;
     //let form: HTMLFormElement;
     //let quantity: number;
-    let color;
-    let lifetime;
-    let type;
-    let intensity;
-    let moveables = [];
-    let result;
+    //let form: HTMLFormElement;
+    let fireworks = [];
+    let fps = 10;
+    // let canvas: HTMLCanvasElement | null; 
     async function handleLoad(_event) {
-        // canvas = <HTMLCanvasElement>document.querySelector("canvas");
-        // if (!canvas)
-        //     return;
-        // crc2 = <CanvasRenderingContext2D>canvas.getContext("2d");
-        // imgData = crc2.getImageData(0, 0, canvas.width, canvas.height);
-        // crc2.fillStyle = "Himmel.jpg";
-        //crc2.fillRect(0, 0, canvas.width, canvas.height);
-        // crc2.fill
+        //form = <HTMLFormElement>document.querySelector("formDesc");
         GetAllRockets();
         let form = document.getElementById("formDesc");
         form?.addEventListener("change", handleDesc);
@@ -37,6 +27,16 @@ var Firework;
         rockets = document.getElementById("rockets");
         let canvas = document.getElementById("canvas");
         canvas?.addEventListener("click", DeleteRocket);
+        // canvas = <HTMLCanvasElement>document.querySelector("canvas");
+        // if (!canvas)
+        //   return;
+        // crc2 = <CanvasRenderingContext2D>canvas.getContext("2d");
+        //imgData = crc2.getImageData(0, 0, canvas.width, canvas.height);
+        // crc2.fillStyle = "Himmel.jpg";
+        //crc2.fillRect(0, 0, canvas.width, canvas.height);
+        // crc2.fill
+        //canvas.addEventListener("click", handleClick); //Canvas bekommt ebenfalls ein "click" Event, damit er reagieren kann, wenn Nutzer Rakete zum explodieren bringen will.
+        window.setInterval(update, 10 / fps);
     }
     function handleDesc(_event) {
         formData = new FormData(document.forms[0]);
@@ -91,77 +91,48 @@ var Firework;
             referrerPolicy: "no-referrer"
         });
         GetAllRockets();
-        update();
     }
+    //Teil 2: Canvas
     function handleClick(_event) {
-        //      let tempPosition: Vector = new Vector(_event.offsetX, _event.offsetY);
-        //   createObjects();  
-        console.log(createObjects); //für das Feuerwerk wird eine Temporäre Position gegeben
+        let tempPosition = new Firework.Vector(_event.offsetX, _event.offsetY);
+        createFirework(tempPosition);
+        //für das Feuerwerk wird eine Temporäre Position gegeben
     }
-    function createObjects(_event) {
-        let mousePositionX = _event.clientX; //- crc2.canvas.offsetLeft;
-        let mousepositionY = _event.clientY; //- crc2.canvas.offsetTop;
-        let formData = new FormData(document.forms[0]);
-        for (let entry of formData) {
-            intensity = Number(formData.get("intensity"));
-            lifetime = Number(formData.get("lifetime"));
-            color = String(formData.get("color"));
-            switch (entry[1]) {
-                case "heart":
-                    type = "heart";
-                    break;
-                case "circle":
-                    type = "circle";
-                    break;
-                case "rectangle":
-                    type = "rectangle";
-                    break;
-            }
-        }
-        createParticle(intensity, mousePositionX, mousepositionY, color, lifetime, type);
-    }
-    async function getDataFromServer(_event) {
-        console.log("Datein wurden geladen");
-        let target = _event.target;
-        let userValue;
-        userValue = target.value;
-        let response = await fetch(formData + "?" + "command=getAllDatas");
-        let responseContent = await response.text();
-        let allDatas = JSON.parse(responseContent);
-        result = allDatas.find(item => item.name === userValue);
-        console.log(result);
-        createUserRocket(result);
-    }
-    Firework.getDataFromServer = getDataFromServer;
-    function createUserRocket(_result) {
-        let color = _result.color;
-        let intensity = _result.intensity;
-        let type = _result.type;
-        let lifetime = _result.lifetime;
-        console.log("Das ist deine Rakete=>", "Type=", type, "Color=", color, "Intensity=", intensity, "Lifetime=", lifetime);
-        // erzeugt neuer Particle mit diesen Werten und pusht ihn in moveable Array
-        // eine Funktion die z.B. auf MouseUp hört, erzeugt eine Explosion mit diesen Werten
-    }
-    function createParticle(_lifetime, _mousePositionX, _mousePositionY, _color, _intensity, _type) {
-        let origin = new Firework.Vector(_mousePositionX, _mousePositionY);
-        let color = _color;
-        for (let i = 0; i < _lifetime; i++) {
-            let radian = (Math.PI * 2) / _lifetime;
-            let px = Math.cos(radian * i) * 110 * Math.random() * 2; //(2)power
-            let py = Math.sin(radian * i) * 110 * Math.random() * 2; //(2)power
-            let velocity = new Firework.Vector(px, py);
-            let particle = new Firework.Particle(origin, velocity, color, lifetime, type);
-            moveables.push(particle);
-        }
+    function createFirework(tempPosition) {
+        console.log("create firework"); //tempPosition ist eine Methode von createFirework und wird als Vector dargestellt
+        let explosionTarget = document.getElementById("explosion"); //createFirework holt sich die Input Elemente über deren ID und erstellt damit das gewünscht Feuerwerk des Nutzers
+        let explosionValue = Number(explosionTarget.value);
+        console.log(explosionValue);
+        let lifetimeTarget = document.getElementById("lifetime_f");
+        let lifetimeValue = Number(lifetimeTarget.value);
+        let colorTarget = document.getElementById("color");
+        let colorValue = colorTarget.value;
+        let amountTarget = document.getElementById("amount");
+        let amountValue = Number(amountTarget.value);
+        let particleTypeTarget = document.getElementById("particleType");
+        let particleTypeValue = Number(particleTypeTarget.value);
+        console.log(particleTypeTarget.value);
+        let particleSizeTarget = document.getElementById("Size_P");
+        let particleSizeValue = Number(particleSizeTarget.value);
+        let firework = new Firework.Firework(tempPosition, particleTypeValue, colorValue, amountValue, explosionValue, particleSizeValue, lifetimeValue * fps / 2);
+        fireworks.push(firework);
     }
     function update() {
-        Firework.crc2.fillStyle = "rgba(0,0,0,0.2)";
-        Firework.crc2.fillRect(0, 0, Firework.crc2.canvas.width, Firework.crc2.canvas.height);
-        for (let moveable of moveables) {
-            moveable.move(1 / 50);
-            moveable.draw();
+        //Der Hintergrund wird geupdatet
+        let canvas; //null= primitiver TypeScript Wert
+        canvas = document.querySelector("canvas");
+        if (!canvas)
+            return;
+        Firework.crc2 = canvas.getContext("2d");
+        Firework.imgData = Firework.crc2.getImageData(0, 0, canvas.width, canvas.height);
+        for (let i = fireworks.length - 1; i >= 0; i--) { //solange noch Daten im Firework Array sind, wird die function update ausgeführt, firework ist also noch Alive 
+            //sobald i>= 0 ist, wird die Funktion beendet und das Feuerwerk ebenso
+            fireworks[i].draw();
+            fireworks[i].update();
+            if (!fireworks[i].isAlive()) {
+                fireworks.splice(i, 1);
+            }
         }
-        DeleteRocket();
     }
 })(Firework || (Firework = {}));
 //# sourceMappingURL=firework.js.map
