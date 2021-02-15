@@ -1,82 +1,45 @@
 namespace Firework {
-    
-    export class Feuerwerk {             //Klasse Feuerwerk, baut aus den eingegebenen Nutzerdaten eine Rakete
 
-        public position: Vector;
-        public color: string;
-        public speed: number;
-        public amount: number;
-        public particleRadius: number;
-        public particleType: number;
-        private lifeTime: number;
-    
-
-    protected particleArray: Particle[] = [];                        //im Particle Array, werden die gewählten Partikel gelistet
-
-        constructor(_position: Vector, _particleType: number, _color: string, _speed: number, _amount: number, _particleRadius: number, _lifetime: number) {
-            console.log(_lifetime);     	                             //ist ausschlaggebend wie lanege Rakte sichtbar ist
-            this.position = _position;
-            this.color = _color;
-            this.amount = _amount;
-            this.particleRadius = _particleRadius;
-            this.lifeTime = _lifetime;
-            this.particleType = _particleType;
-
-            switch (_particleType){
-                
-                case 0:
-                    for (let i: number = 0; i < this.amount; i++) {
-                        this.particleArray.push(new Rectangle(this.position, Vector.getuberVector(_speed, Vector.getRandom(-1, 1))));
-                        console.log("Rectangle");
-                    }
-                    break;
-
-                case 1:
-                    for (let i: number = 0; i < this.amount; i++) {
-                        this.particleArray.push(new Circle (this.position, Vector.getuberVector(_speed, Vector.getRandom(-1, 1))));
-                        console.log("Circle");
-
-                    }
-                    break;
-
-                case 2:
-                    for (let i: number = 0; i < this.amount; i++) {
-                        this.particleArray.push(new Heart(this.position, Vector.getuberVector(_speed, Vector.getRandom(-1, 1))));
-                        console.log("Heart");
-                    }
-                    break;
-
-                   
-
-               default: console.log("wrong type")
-                                                                    // wenn keiner der gennanten Typen ausgewählt wurde, wird "wrong type" ausgegeben.                    return;
-
-            }
-        }
-
-        public draw(): void {
-            for (let i: number = 0; i < this.particleArray.length; i++) {
-                this.particleArray[i].draw(this.color, this.particleRadius);
-
-            }
-
-        }
-
-        public update(): void {
-            console.log(this.lifeTime);
-            this.lifeTime--;
-            for (let i: number = 0; i < this.particleArray.length; i++) {
-                this.particleArray[i].move();
-            }
-        }
-
-        public isAlive(): boolean {
-            if (this.lifeTime == 0) {
-                return false;
-            }
-            else {
-                return true;
-            }
-        }
+    export interface Rocket {
+        name: string;
+        intensity: number;
+        color: string;
+        type: string;
+        lifetime: number;
     }
+
+    export function generateContent(_titelList: Rocket[]): void {
+
+        let group: HTMLElement | null = null;
+        let fieldset: HTMLFieldSetElement | null = document.querySelector("fieldset#fireworkTitel");
+        group = createSelect(_titelList);
+
+        if (fieldset && group) //wenn das Fieldset UND (&&) die Gruppe definiert ist, dann kannst du die group als Kind anhängen
+            fieldset.appendChild(group);
+    }
+
+
+
+
+    function createSelect(_titelList: Rocket[]): HTMLElement | null {
+
+        // let group: HTMLDivElement = document.createElement("div");
+        let selection: HTMLSelectElement = document.createElement("select");
+        selection.name = "LoadedTitels";
+        selection.addEventListener("change",getDataFromServer );
+        //selection.id = "Test";
+
+        for (let titel of _titelList) {
+            let option: HTMLOptionElement = document.createElement("option");
+
+            option.setAttribute("name", titel.name);
+
+            option.value = option.textContent = titel.name;
+
+            selection.appendChild(option);
+
+        }
+        return selection;
+    }
+
 }
