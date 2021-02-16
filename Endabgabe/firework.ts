@@ -8,22 +8,16 @@ namespace Firework {
     export let crc2: CanvasRenderingContext2D;
     let formData: FormData;
     let rockets: HTMLDivElement;
-    // tslint:disable-next-line:no-any
     let response: any[];
-    //let form: HTMLFormElement;
-    //let quantity: number;
-    //let form: HTMLFormElement;
     let fireworks: Firework[] = [];
     let fps: number = 10;
-   // let canvas: HTMLCanvasElement | null; 
     
     
     
  
     async function handleLoad(_event: Event):Promise<void> {
 
-        //form = <HTMLFormElement>document.querySelector("formDesc");
-// drawCanvas();
+    
         GetAllRockets();
         let form: HTMLElement | null = document.getElementById("formDesc");
         form?.addEventListener("change", handleDesc);
@@ -35,16 +29,6 @@ namespace Firework {
         let canvas: HTMLElement | null = document.getElementById("canvas");
         canvas?.addEventListener("click", handleClick);
 
-       // canvas = <HTMLCanvasElement>document.querySelector("canvas");
-       // if (!canvas)
-         //   return;
-      // crc2 = <CanvasRenderingContext2D>canvas.getContext("2d");
-     //imgData = crc2.getImageData(0, 0, canvas.width, canvas.height);
-
-        // crc2.fillStyle = "Himmel.jpg";
-        //crc2.fillRect(0, 0, canvas.width, canvas.height);
-       // crc2.fill
-      // canvas.addEventListener("click", handleClick); //Canvas bekommt ebenfalls ein "click" Event, damit er reagieren kann, wenn Nutzer Rakete zum explodieren bringen will.
       
 
        window.setInterval(update, 100 / fps);
@@ -113,40 +97,34 @@ namespace Firework {
 
     //Teil 2: Canvas
 
-   function handleClick(_event: MouseEvent): void {                                  //wenn "click" auf den Canvas gehört wird, wird offsetX & offset Y ausgelöst
+   function handleClick(_event: MouseEvent): void {                                  
         let tempPosition: Vector = new Vector(_event.offsetX, _event.offsetY);
         createFirework(tempPosition);  
-                                            //für das Feuerwerk wird eine Temporäre Position gegeben
+                                            
 
     }
 
         
     
     function createFirework(tempPosition: Vector) {    
-                                     //tempPosition ist eine Methode von createFirework und wird als Vector dargestellt
+                                     
       
         if(response.length > 0){
             console.log("create firework"); 
         let rocket: any=response[0];
-        // let explosionTarget: HTMLInputElement = <HTMLInputElement>document.getElementById("explosion");  //createFirework holt sich die Input Elemente über deren ID und erstellt damit das gewünscht Feuerwerk des Nutzers
+        
         let explosionValue = Number(rocket.ExploSize);
         console.log(explosionValue);
 
-        // let lifetimeTarget: HTMLInputElement = <HTMLInputElement>document.getElementById("lifetime_f");
         let lifetimeValue = Number(rocket.Lifetime);
     
-        // let colorTarget: HTMLSelectElement = <HTMLSelectElement>document.getElementById("color");
         let colorValue: string = rocket.Color;
 
-        // let amountTarget: HTMLInputElement = <HTMLInputElement>document.getElementById("amount");
         let amountValue = Number(rocket.Amount);
 
-        // let particleTypeTarget: HTMLSelectElement = <HTMLSelectElement>document.getElementById("particleType");
         let particleTypeValue = Number(rocket.ParticleType);
         console.log(particleTypeValue);
       
-
-        // let particleSizeTarget: HTMLInputElement = <HTMLInputElement>document.getElementById("Size_P");
         let particleSizeValue = Number(rocket.ParticleSize);
 
         let firework: Firework = new Firework(tempPosition, particleTypeValue, colorValue, amountValue, explosionValue,particleSizeValue, lifetimeValue * fps / 2);
@@ -158,9 +136,8 @@ namespace Firework {
     }
 
     function update() {
-        //Der Hintergrund wird geupdatet
-        let canvas: HTMLCanvasElement | null; //null= primitiver TypeScript Wert
-
+        
+        let canvas: HTMLCanvasElement | null; 
 
         canvas = <HTMLCanvasElement>document.querySelector("canvas");
         if (!canvas)
@@ -171,8 +148,7 @@ namespace Firework {
 // drawCanvas();
         
 
-        for (let i: number = fireworks.length - 1; i >= 0; i--) {           //solange noch Daten im Firework Array sind, wird die function update ausgeführt, firework ist also noch Alive 
-            //sobald i>= 0 ist, wird die Funktion beendet und das Feuerwerk ebenso
+        for (let i: number = fireworks.length - 1; i >= 0; i--) {         
             
             fireworks[i].draw();
             fireworks[i].update();
