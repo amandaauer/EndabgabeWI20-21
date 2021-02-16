@@ -57,4 +57,4 @@ var Firework;
     }
     Firework.Vector = Vector;
 })(Firework || (Firework = {}));
-//# sourceMappingURL=Vector.js.map
+//# sourceMappingURL=vector.js.map
