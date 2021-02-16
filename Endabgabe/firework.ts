@@ -23,7 +23,7 @@ namespace Firework {
     async function handleLoad(_event: Event):Promise<void> {
 
         //form = <HTMLFormElement>document.querySelector("formDesc");
-
+// drawCanvas();
         GetAllRockets();
         let form: HTMLElement | null = document.getElementById("formDesc");
         form?.addEventListener("change", handleDesc);
@@ -34,7 +34,6 @@ namespace Firework {
         rockets = <HTMLDivElement>document.getElementById("rockets");
         let canvas: HTMLElement | null = document.getElementById("canvas");
         canvas?.addEventListener("click", handleClick);
-
 
        // canvas = <HTMLCanvasElement>document.querySelector("canvas");
        // if (!canvas)
@@ -48,7 +47,7 @@ namespace Firework {
       // canvas.addEventListener("click", handleClick); //Canvas bekommt ebenfalls ein "click" Event, damit er reagieren kann, wenn Nutzer Rakete zum explodieren bringen will.
       
 
-       window.setInterval(update, 1000 / fps);
+       window.setInterval(update, 100 / fps);
 
 
         
@@ -169,7 +168,7 @@ namespace Firework {
 
         crc2 = <CanvasRenderingContext2D>canvas.getContext("2d");
         imgData = crc2.getImageData(0, 0, canvas.width, canvas.height);
-
+// drawCanvas();
         
 
         for (let i: number = fireworks.length - 1; i >= 0; i--) {           //solange noch Daten im Firework Array sind, wird die function update ausgeführt, firework ist also noch Alive 
@@ -177,7 +176,7 @@ namespace Firework {
             
             fireworks[i].draw();
             fireworks[i].update();
-            if (fireworks[i].isAlive() === false) {
+            if (!fireworks[i].isAlive()) {
 
                 fireworks.splice(i, 1);
                 

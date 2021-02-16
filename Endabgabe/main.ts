@@ -3,7 +3,7 @@ namespace Firework {
 
     export class Firework {             //Klasse Feuerwerk, baut aus den eingegebenen Nutzerdaten eine Rakete
 
-        public position: Vector;                      //Werten wird ein Typ zugeordnet
+        public position: Vector;                    //Werten wird ein Typ zugeordnet
         public color: string;
         public explosion: number;
         public amount: number;
@@ -42,8 +42,8 @@ namespace Firework {
 
                 case 2:
                     for (let i: number = 0; i < this.amount; i++) {
-                        this.particleArray.push(new Line(this.position, Vector.getuberVector(_explosion, Vector.getRandom(-1, 1))));
-                        console.log("Line");
+                        this.particleArray.push(new Heart(this.position, Vector.getuberVector(_explosion, Vector.getRandom(-1, 1))));
+                        console.log("Heart");
                     }
                     break;
 

@@ -25,8 +25,8 @@ var Firework;
                     break;
                 case 2:
                     for (let i = 0; i < this.amount; i++) {
-                        this.particleArray.push(new Firework_1.Line(this.position, Firework_1.Vector.getuberVector(_explosion, Firework_1.Vector.getRandom(-1, 1))));
-                        console.log("Line");
+                        this.particleArray.push(new Firework_1.Heart(this.position, Firework_1.Vector.getuberVector(_explosion, Firework_1.Vector.getRandom(-1, 1))));
+                        console.log("Heart");
                     }
                     break;
                 default:

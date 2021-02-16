@@ -17,6 +17,7 @@ var Firework;
     // let canvas: HTMLCanvasElement | null; 
     async function handleLoad(_event) {
         //form = <HTMLFormElement>document.querySelector("formDesc");
+        // drawCanvas();
         GetAllRockets();
         let form = document.getElementById("formDesc");
         form?.addEventListener("change", handleDesc);
@@ -36,7 +37,7 @@ var Firework;
         //crc2.fillRect(0, 0, canvas.width, canvas.height);
         // crc2.fill
         // canvas.addEventListener("click", handleClick); //Canvas bekommt ebenfalls ein "click" Event, damit er reagieren kann, wenn Nutzer Rakete zum explodieren bringen will.
-        window.setInterval(update, 1000 / fps);
+        window.setInterval(update, 100 / fps);
     }
     function handleDesc(_event) {
         formData = new FormData(document.forms[0]);
@@ -130,11 +131,12 @@ var Firework;
             return;
         Firework.crc2 = canvas.getContext("2d");
         Firework.imgData = Firework.crc2.getImageData(0, 0, canvas.width, canvas.height);
+        // drawCanvas();
         for (let i = fireworks.length - 1; i >= 0; i--) { //solange noch Daten im Firework Array sind, wird die function update ausgeführt, firework ist also noch Alive 
             //sobald i>= 0 ist, wird die Funktion beendet und das Feuerwerk ebenso
             fireworks[i].draw();
             fireworks[i].update();
-            if (fireworks[i].isAlive() === false) {
+            if (!fireworks[i].isAlive()) {
                 fireworks.splice(i, 1);
             }
         }
